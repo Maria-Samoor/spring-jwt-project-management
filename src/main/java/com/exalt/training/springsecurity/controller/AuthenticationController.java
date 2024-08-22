@@ -5,6 +5,7 @@ import com.exalt.training.springsecurity.dto.RefreshTokenRequest;
 import com.exalt.training.springsecurity.dto.SignUpRequest;
 import com.exalt.training.springsecurity.dto.SigninRequest;
 import com.exalt.training.springsecurity.exception.EmailAlreadyUsedException;
+import com.exalt.training.springsecurity.model.User;
 import com.exalt.training.springsecurity.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -41,7 +44,17 @@ public class AuthenticationController {
             return ResponseEntity.badRequest().body(bindingResult.getFieldError().getDefaultMessage());
         }
         try {
-            return ResponseEntity.ok(authenticationService.signup(signUpRequest));
+            User createdUser = authenticationService.signup(signUpRequest);
+            Map<String, Object> response = new HashMap<>();
+            response.put("id", createdUser.getId());
+            response.put("firstName", createdUser.getFirstName());
+            response.put("secondName", createdUser.getSecondName());
+            response.put("email", createdUser.getEmail());
+            response.put("password", createdUser.getPassword());
+            response.put("role", createdUser.getRole().name());
+            response.put("username", createdUser.getFirstName() + " " + createdUser.getSecondName());
+
+            return ResponseEntity.ok(response);
         } catch (EmailAlreadyUsedException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
