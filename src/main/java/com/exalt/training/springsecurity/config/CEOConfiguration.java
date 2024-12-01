@@ -33,14 +33,6 @@ public class CEOConfiguration {
             maria.setRole(Role.CEO);
             maria.setPassword(new BCryptPasswordEncoder().encode("maria1234"));
             userRepository.save(maria);
-            User abedCEOAccount = userRepository.findByRole(Role.CEO);
-            User abed = new User();
-            abed.setEmail("abed@gmail.com");
-            abed.setFirstName("abedulghaffar");
-            abed.setSecondName("abed");
-            abed.setRole(Role.CEO);
-            abed.setPassword(new BCryptPasswordEncoder().encode("abed1234"));
-            userRepository.save(abed);
         };
     }
 }
